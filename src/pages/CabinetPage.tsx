@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import Icon from '@/components/ui/icon';
 import WaveVisualizer from '@/components/WaveVisualizer';
+import { Track } from '@/hooks/useAudioPlayer';
+import { TRACKS } from '@/lib/tracks';
+
+interface CabinetPageProps {
+  onPlay: (track: Track) => void;
+  currentTrackId: number | null;
+  isPlaying: boolean;
+}
 
 const PURCHASES = [
   { id: 1, title: 'Neon Horizon', artist: 'SYNTHWAVE_X', license: 'Стандарт', date: '02.06.2025', price: 990, format: 'WAV' },
@@ -22,10 +30,14 @@ const TABS: { id: TabId; label: string; icon: string }[] = [
   { id: 'profile', label: 'Профиль', icon: 'User' },
 ];
 
-export default function CabinetPage() {
+export default function CabinetPage({ onPlay, currentTrackId, isPlaying }: CabinetPageProps) {
   const [tab, setTab] = useState<TabId>('purchases');
-  const [playingId, setPlayingId] = useState<number | null>(null);
   const [isLoggedIn] = useState(true);
+
+  const handlePlay = (purchaseId: number) => {
+    const track = TRACKS.find(t => t.id === purchaseId);
+    if (track) onPlay(track);
+  };
 
   if (!isLoggedIn) {
     return (
@@ -102,23 +114,23 @@ export default function CabinetPage() {
               >
                 {/* Play */}
                 <button
-                  onClick={() => setPlayingId(playingId === p.id ? null : p.id)}
+                  onClick={() => handlePlay(p.id)}
                   className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-all"
                   style={{
-                    background: playingId === p.id ? 'hsl(var(--primary))' : 'rgba(255,255,255,0.05)',
+                    background: currentTrackId === p.id ? 'hsl(var(--primary))' : 'rgba(255,255,255,0.05)',
                     border: '1px solid rgba(0,245,160,0.2)',
                   }}
                 >
                   <Icon
-                    name={playingId === p.id ? 'Pause' : 'Play'}
+                    name={currentTrackId === p.id && isPlaying ? 'Pause' : 'Play'}
                     size={14}
-                    className={playingId === p.id ? 'text-primary-foreground ml-0.5' : 'text-primary ml-0.5'}
+                    className={currentTrackId === p.id ? 'text-primary-foreground ml-0.5' : 'text-primary ml-0.5'}
                   />
                 </button>
 
                 {/* Wave */}
                 <WaveVisualizer
-                  playing={playingId === p.id}
+                  playing={currentTrackId === p.id && isPlaying}
                   barCount={16}
                   height={28}
                   className="flex-shrink-0 opacity-40 group-hover:opacity-70 transition-opacity"
