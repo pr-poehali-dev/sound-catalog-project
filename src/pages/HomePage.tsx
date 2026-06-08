@@ -50,9 +50,8 @@ export default function HomePage({ onNavigate, onPlay, currentTrackId, isPlaying
             </div>
 
             <h1 className="font-unbounded font-black text-5xl md:text-7xl leading-[0.95] mb-6">
-              <span className="block text-foreground">ЗВУК</span>
-              <span className="block neon-text">КОТОРЫЙ</span>
-              <span className="block text-foreground">ПРОДАЁТ</span>
+              <span className="block text-foreground">ТВОЙ</span>
+              <span className="block neon-text">ЗВУК</span>
             </h1>
 
             <p className="font-ibm text-lg text-foreground/50 leading-relaxed mb-10 max-w-md">
